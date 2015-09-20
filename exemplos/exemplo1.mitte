@@ -1,0 +1,16 @@
+def main()  {
+   n, nRebuilt : int;    msg : string;  
+   n = 51423;  ## numero a ser testado   
+   
+    (* A divisao de inteiros arredonda para baixo (em caso
+     de divisao inexata). Assim, numeros impares        
+    ficarao com uma unidade a menos do valor inicial. *) 
+   
+   nRebuilt = (n / 2) * 2;  
+   if ( n == nRebuilt )
+          msg = "par:\n";
+   else       
+   		msg = "impar";  
+   
+   print(msg);  
+   }  
