@@ -15,7 +15,7 @@ public class TestLexer {
 	 */
 	public static void main(String[] args) throws Exception {
 		MitteLexer lexer ;
-		lexer = new MitteLexer(new FileReader("C:/Users/Ivan Rodrigues/Desktop/dev/workspace/Mitte-Compilador/exemplos/exemplo2.mitte"));
+		lexer = new MitteLexer(new FileReader("C:/Users/Ivan Rodrigues/Desktop/dev/workspace/Mitte-Compilador/exemplos/exemplo0.mitte"));
 		Token token = null;
 		
 		System.out.println("\n\n\n");
