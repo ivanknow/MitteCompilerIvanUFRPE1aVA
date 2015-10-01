@@ -2,7 +2,10 @@ package ufrpe.compiladores.mitte;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import ufrpe.compiladores.mitte.exception.MitteParserException;
 
@@ -10,6 +13,15 @@ public class MitteParser {
 	private MitteLexer lexer;
 	private Token currentToken;
 	private FileReader source;
+	private ArrayList<TokenType> firstComando = new ArrayList<TokenType>(){{
+		add(TokenType.IDENTIFICADOR);
+		add(TokenType.KEY_WHILE);
+		add(TokenType.KEY_IF);
+		add(TokenType.KEY_PRINT);
+		add(TokenType.KEY_CALL);
+		add(TokenType.KEY_RETURN);
+		add(TokenType.ABRE_CHAVE);
+	}};
 
 	public MitteParser(FileReader source) {
 		this.source = source;
@@ -98,8 +110,40 @@ public class MitteParser {
 
 	}
 
-	private void parseListaComandos() {
-		// TODO Auto-generated method stub
+	private void parseListaComandos() throws MitteParserException, IOException {
+		while(firstComando.contains(currentToken.getType())){
+			parseComando();
+		}
+		
+	}
+
+	private void parseComando() throws MitteParserException, IOException {
+		TokenType tp = currentToken.getType();
+		switch (tp) {
+	
+		case IDENTIFICADOR://atribuicao ou declaracao de var
+		
+			break;
+		case KEY_WHILE:// iteracao
+			parseIteracao();
+			break;
+		case KEY_IF://decisao
+			parseDecisao();
+			break;
+		case KEY_PRINT://escrita
+			parseEscrita();
+			break;
+		case KEY_CALL://chamada
+			parseChamada();
+			break;
+		case KEY_RETURN://retorno
+			parseRetorno();
+			break;
+		case ABRE_CHAVE://bloco
+			parseBloco();
+			break;
+
+		}
 		
 	}
 

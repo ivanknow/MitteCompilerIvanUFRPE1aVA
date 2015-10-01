@@ -1,8 +1,6 @@
 package ufrpe.compiladores.mitte.test.manual;
 
-import java.io.ByteArrayInputStream;
 import java.io.FileReader;
-import java.io.InputStream;
 
 import ufrpe.compiladores.mitte.MitteParser;
 

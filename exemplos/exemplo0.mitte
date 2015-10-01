@@ -1,1 +1,6 @@
 n,t : int; 
+
+def main()  {
+   n: int; 
+   
+   }
