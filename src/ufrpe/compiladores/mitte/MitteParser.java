@@ -122,7 +122,14 @@ public class MitteParser {
 		switch (tp) {
 	
 		case IDENTIFICADOR://atribuicao ou declaracao de var
-		
+			acceptToken();//TODO lembrar de fazer otro metodo
+			if(currentToken.getType() == TokenType.DOIS_PONTOS){//declaracao
+				parseDeclVariavel();
+			}else if(currentToken.getType() == TokenType.OP_IGUAL){//atribuicao
+				parseAtribuicao();
+			}else{
+				throw new MitteParserException("[PARSE COMANDO]");
+			}
 			break;
 		case KEY_WHILE:// iteracao
 			parseIteracao();
@@ -133,8 +140,8 @@ public class MitteParser {
 		case KEY_PRINT://escrita
 			parseEscrita();
 			break;
-		case KEY_CALL://chamada
-			parseChamada();
+		case KEY_CALL://chamada de funcao cmd
+			parseChamadaFuncaoCMD();
 			break;
 		case KEY_RETURN://retorno
 			parseRetorno();
@@ -144,6 +151,76 @@ public class MitteParser {
 			break;
 
 		}
+		
+	}
+
+	private void parseRetorno() throws MitteParserException, IOException {
+		acceptToken();//retorno
+		parseExprecao();
+		acceptToken(TokenType.PONTO_VIRGULA);
+	}
+
+
+	private void parseChamadaFuncaoCMD() throws MitteParserException, IOException {//chamada de funcao cmd
+		acceptToken();
+		parseChamadaFuncao();
+		acceptToken(TokenType.PONTO_VIRGULA);
+		
+	}
+
+	private void parseChamadaFuncao() throws MitteParserException, IOException {
+		acceptToken(TokenType.IDENTIFICADOR);
+		acceptToken(TokenType.ABRE_PAR);
+		
+		parseListaExp();
+		acceptToken(TokenType.FECHA_PAR);
+		
+	}
+
+	private void parseListaExp() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void parseEscrita() throws MitteParserException, IOException {
+		acceptToken();
+		acceptToken(TokenType.ABRE_PAR);
+		parseExprecao();
+		acceptToken(TokenType.FECHA_PAR);
+	}
+
+	private void parseDecisao() throws MitteParserException, IOException {
+		acceptToken();
+		acceptToken(TokenType.ABRE_PAR);
+		parseExprecao();
+		acceptToken(TokenType.FECHA_PAR);
+		parseComando();
+		parseRestoDecisao();
+		
+	}
+
+	private void parseRestoDecisao() throws MitteParserException, IOException {
+		if(currentToken.getType()==TokenType.KEY_ELSE){
+			acceptToken();
+			parseComando();
+		}else{
+			//vazio
+		}
+		
+	}
+
+	private void parseIteracao() throws MitteParserException, IOException {
+		acceptToken();
+		acceptToken(TokenType.ABRE_PAR);
+		parseExprecao();
+		acceptToken(TokenType.FECHA_PAR);
+		parseComando();
+		
+	}
+
+	private void parseAtribuicao() throws MitteParserException, IOException {
+		acceptToken();//igual
+		parseExprecao();
 		
 	}
 
@@ -211,6 +288,10 @@ public class MitteParser {
 
 	public void setCurrentToken(Token currentToken) {
 		this.currentToken = currentToken;
+	}
+	private void parseExprecao() {
+		
+		
 	}
 
 }
