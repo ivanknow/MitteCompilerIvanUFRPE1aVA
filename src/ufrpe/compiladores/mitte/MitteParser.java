@@ -3,9 +3,6 @@ package ufrpe.compiladores.mitte;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import ufrpe.compiladores.mitte.exception.MitteParserException;
 
@@ -13,15 +10,17 @@ public class MitteParser {
 	private MitteLexer lexer;
 	private Token currentToken;
 	private FileReader source;
-	private ArrayList<TokenType> firstComando = new ArrayList<TokenType>(){{
-		add(TokenType.IDENTIFICADOR);
-		add(TokenType.KEY_WHILE);
-		add(TokenType.KEY_IF);
-		add(TokenType.KEY_PRINT);
-		add(TokenType.KEY_CALL);
-		add(TokenType.KEY_RETURN);
-		add(TokenType.ABRE_CHAVE);
-	}};
+	private ArrayList<TokenType> firstComando = new ArrayList<TokenType>() {
+		{
+			add(TokenType.IDENTIFICADOR);
+			add(TokenType.KEY_WHILE);
+			add(TokenType.KEY_IF);
+			add(TokenType.KEY_PRINT);
+			add(TokenType.KEY_CALL);
+			add(TokenType.KEY_RETURN);
+			add(TokenType.ABRE_CHAVE);
+		}
+	};
 
 	public MitteParser(FileReader source) {
 		this.source = source;
@@ -72,6 +71,14 @@ public class MitteParser {
 
 	}
 
+	private void parseDeclVariavelLocal() throws MitteParserException, IOException {
+
+		acceptToken();
+		parseTipo();
+		acceptToken(TokenType.PONTO_VIRGULA);
+
+	}
+
 	private void parseListaIdent() throws MitteParserException, IOException {
 		acceptToken();// identificador
 		while (currentToken.getType() == TokenType.VIRGULA) {
@@ -111,117 +118,151 @@ public class MitteParser {
 	}
 
 	private void parseListaComandos() throws MitteParserException, IOException {
-		while(firstComando.contains(currentToken.getType())){
+		while (firstComando.contains(currentToken.getType())) {
 			parseComando();
 		}
-		
+
 	}
 
 	private void parseComando() throws MitteParserException, IOException {
 		TokenType tp = currentToken.getType();
 		switch (tp) {
-	
-		case IDENTIFICADOR://atribuicao ou declaracao de var
-			acceptToken();//TODO lembrar de fazer otro metodo
-			if(currentToken.getType() == TokenType.DOIS_PONTOS){//declaracao
-				parseDeclVariavel();
-			}else if(currentToken.getType() == TokenType.OP_IGUAL){//atribuicao
-				parseAtribuicao();
-			}else{
-				throw new MitteParserException("[PARSE COMANDO]");
+
+		case IDENTIFICADOR:// atribuicao ou declaracao de var
+			parseListaIdent();
+			if (currentToken.getType() == TokenType.DOIS_PONTOS) {
+				parseDeclVariavelLocal();
+			} else if (currentToken.getType() == TokenType.ATRIBUICAO) {
+				parseAtribuicaoLocal();
+				
+			} else {
+				throw new MitteParserException("[PARSE COMANDO]" + currentToken);
 			}
 			break;
 		case KEY_WHILE:// iteracao
 			parseIteracao();
 			break;
-		case KEY_IF://decisao
+		case KEY_IF:// decisao
 			parseDecisao();
 			break;
-		case KEY_PRINT://escrita
+		case KEY_PRINT:// escrita
 			parseEscrita();
 			break;
-		case KEY_CALL://chamada de funcao cmd
+		case KEY_CALL:// chamada de funcao cmd
 			parseChamadaFuncaoCMD();
 			break;
-		case KEY_RETURN://retorno
+		case KEY_RETURN:// retorno
 			parseRetorno();
 			break;
-		case ABRE_CHAVE://bloco
+		case ABRE_CHAVE:// bloco
 			parseBloco();
 			break;
 
 		}
-		
+
 	}
 
 	private void parseRetorno() throws MitteParserException, IOException {
-		acceptToken();//retorno
-		parseExprecao();
+		acceptToken();// retorno
+		parseExpressao();
 		acceptToken(TokenType.PONTO_VIRGULA);
 	}
 
-
-	private void parseChamadaFuncaoCMD() throws MitteParserException, IOException {//chamada de funcao cmd
+	private void parseChamadaFuncaoCMD() throws MitteParserException, IOException {// chamada
+																					// de
+																					// funcao
+																					// cmd
 		acceptToken();
 		parseChamadaFuncao();
 		acceptToken(TokenType.PONTO_VIRGULA);
-		
+
 	}
 
 	private void parseChamadaFuncao() throws MitteParserException, IOException {
 		acceptToken(TokenType.IDENTIFICADOR);
 		acceptToken(TokenType.ABRE_PAR);
-		
+
 		parseListaExp();
 		acceptToken(TokenType.FECHA_PAR);
-		
+
 	}
 
-	private void parseListaExp() {
-		// TODO Auto-generated method stub
-		
+	private void parseChamadaFuncaoLocal() throws MitteParserException, IOException {
+
+		acceptToken(TokenType.ABRE_PAR);
+
+		parseListaExp();
+		acceptToken(TokenType.FECHA_PAR);
+
+	}
+
+	private void parseListaExp() throws MitteParserException, IOException {
+
+		if(currentToken.getType() == TokenType.NUMERO_CHAR || currentToken.getType() == TokenType.NUMERO_INT
+				|| currentToken.getType() == TokenType.NUMERO_REAL || currentToken.getType() == TokenType.STRING_LITERAL
+				|| currentToken.getType() == TokenType.IDENTIFICADOR) {
+			parseExpressao();
+			parseRestoExpressao();
+		}
+
+	}
+
+	private void parseRestoExpressao() throws MitteParserException, IOException {
+		while(currentToken.getType() == TokenType.VIRGULA){
+			acceptToken();
+			parseExpressao();
+		}
+	
 	}
 
 	private void parseEscrita() throws MitteParserException, IOException {
 		acceptToken();
 		acceptToken(TokenType.ABRE_PAR);
-		parseExprecao();
+		parseExpressao();
 		acceptToken(TokenType.FECHA_PAR);
+		acceptToken(TokenType.PONTO_VIRGULA);
 	}
 
 	private void parseDecisao() throws MitteParserException, IOException {
 		acceptToken();
 		acceptToken(TokenType.ABRE_PAR);
-		parseExprecao();
+		parseExpressao();
 		acceptToken(TokenType.FECHA_PAR);
 		parseComando();
 		parseRestoDecisao();
-		
+
 	}
 
 	private void parseRestoDecisao() throws MitteParserException, IOException {
-		if(currentToken.getType()==TokenType.KEY_ELSE){
+		if (currentToken.getType() == TokenType.KEY_ELSE) {
 			acceptToken();
 			parseComando();
-		}else{
-			//vazio
+		} else {
+			// vazio
 		}
-		
+
 	}
 
 	private void parseIteracao() throws MitteParserException, IOException {
 		acceptToken();
 		acceptToken(TokenType.ABRE_PAR);
-		parseExprecao();
+		parseExpressao();
 		acceptToken(TokenType.FECHA_PAR);
 		parseComando();
-		
+
 	}
 
 	private void parseAtribuicao() throws MitteParserException, IOException {
-		acceptToken();//igual
-		parseExprecao();
+		parseListaIdent();
+		acceptToken();// igual
+		parseExpressao();
+
+	}
+	private void parseAtribuicaoLocal() throws MitteParserException, IOException {
 		
+		acceptToken();// igual
+		parseExpressao();
+		acceptToken(TokenType.PONTO_VIRGULA);
 	}
 
 	private void parseAssinatura() throws MitteParserException, IOException {
@@ -289,9 +330,139 @@ public class MitteParser {
 	public void setCurrentToken(Token currentToken) {
 		this.currentToken = currentToken;
 	}
-	private void parseExprecao() {
-		
-		
+
+	private void parseExpressao() throws MitteParserException, IOException {
+		parseExpOrAnd();
+
+	}
+
+	private void parseExpOrAnd() throws MitteParserException, IOException {
+		parseExpOpComparacao();
+		parseRestoExpOrAnd();
+	}
+
+	private void parseRestoExpOrAnd() throws MitteParserException, IOException {
+		if (currentToken.getType() == TokenType.OR) {
+			acceptToken();
+			parseExpOrAnd();
+		} else if (currentToken.getType() == TokenType.AND) {
+			acceptToken();
+			parseExpOrAnd();
+		} else {
+			// vazio
+		}
+
+	}
+
+	private void parseExpOpComparacao() throws MitteParserException, IOException {
+		parseExpMaisMenos();
+		parseRestoExpOpComparacao();
+
+	}
+
+	private void parseRestoExpOpComparacao() throws MitteParserException, IOException {
+		if (currentToken.getType() == TokenType.OP_IGUAL) {
+			acceptToken();
+			parseExpOpComparacao();
+		} else if (currentToken.getType() == TokenType.OP_DIFERENTE) {
+
+			acceptToken();
+			parseExpOpComparacao();
+		} else if (currentToken.getType() == TokenType.OP_MENOR_QUE) {
+
+			acceptToken();
+			parseExpOpComparacao();
+		} else if (currentToken.getType() == TokenType.OP_MAIOR_QUE) {
+
+			acceptToken();
+			parseExpOpComparacao();
+		} else if (currentToken.getType() == TokenType.OP_MENOR_OU_IGUAL) {
+
+			acceptToken();
+			parseExpOpComparacao();
+		} else if (currentToken.getType() == TokenType.OP_MAIOR_OU_IGUAL) {
+
+			acceptToken();
+			parseExpOpComparacao();
+		} else {
+			// vazio
+		}
+
+	}
+
+	private void parseExpMaisMenos() throws MitteParserException, IOException {
+		parseExpVezesDivResto();
+		parseRestoExpMaisMenos();
+
+	}
+
+	private void parseRestoExpMaisMenos() throws MitteParserException, IOException {
+		if (currentToken.getType() == TokenType.SOMA) {
+			acceptToken();
+			parseExpMaisMenos();
+		} else if (currentToken.getType() == TokenType.SUB) {
+
+			acceptToken();
+			parseExpMaisMenos();
+		} else {
+			// vazio
+		}
+
+	}
+
+	private void parseExpVezesDivResto() throws MitteParserException, IOException {
+		parseExpBasica();
+		parseRestoExpVezesDivResto();
+
+	}
+
+	private void parseRestoExpVezesDivResto() throws MitteParserException, IOException {
+		if (currentToken.getType() == TokenType.MULT) {
+			acceptToken();
+			parseExpVezesDivResto();
+		} else if (currentToken.getType() == TokenType.DIV) {
+
+			acceptToken();
+			parseExpVezesDivResto();
+		} else if (currentToken.getType() == TokenType.RESTO) {
+
+			acceptToken();
+			parseExpVezesDivResto();
+		} else {
+			// vazio
+		}
+
+	}
+
+	private void parseExpBasica() throws MitteParserException, IOException {
+		if (currentToken.getType() == TokenType.NUMERO_INT
+				|| currentToken.getType() == TokenType.NUMERO_CHAR
+				|| currentToken.getType() == TokenType.NUMERO_REAL
+				|| currentToken.getType() == TokenType.STRING_LITERAL) {
+			acceptToken();
+
+		} else if (currentToken.getType() == TokenType.IDENTIFICADOR) {// identificador
+			acceptToken();
+			if (currentToken.getType() == TokenType.ABRE_PAR) {//chamada funcao
+				parseChamadaFuncaoLocal();
+			}
+
+		} else if (currentToken.getType() == TokenType.ABRE_PAR) {
+			acceptToken();
+			parseExpressao();
+			acceptToken(TokenType.FECHA_PAR);
+		} else if (currentToken.getType() == TokenType.NOT) {
+			acceptToken();
+			parseExpBasica();
+		} else if (currentToken.getType() == TokenType.SUB) {
+			acceptToken();
+			parseExpBasica();
+		}
+
+		else {
+			throw new MitteParserException("[Exprecao Basica]" + currentToken);
+		}
+
 	}
 
 }

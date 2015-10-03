@@ -10,7 +10,7 @@ public class TestParser {
 	 * Este metodo executa um pequeno teste de reconhecimento.  
 	 */
 	public static void main(String[] args) throws Exception {
-		MitteParser parser = new MitteParser(new FileReader("C:/Users/Ivan Rodrigues/Desktop/dev/workspace/Mitte-Compilador/exemplos/exemplo0.mitte"));
+		MitteParser parser = new MitteParser(new FileReader("C:/Users/Ivan Rodrigues/Desktop/dev/workspace/Mitte-Compilador/exemplos/exemplo2.mitte"));
 		
 
 		System.out.println(" == TESTE DO PARSER ==\n");
