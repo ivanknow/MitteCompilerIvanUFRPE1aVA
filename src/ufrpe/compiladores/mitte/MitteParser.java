@@ -33,7 +33,7 @@ public class MitteParser {
 			lexer.yyreset(source);
 			setCurrentToken(lexer.nextToken());
 			parseProgram();
-			acceptToken();// tirei o eof pois o mesmo ja sera lido no program
+			acceptToken();//EOF
 
 			return true;
 		} catch (IOException e) {
@@ -163,16 +163,13 @@ public class MitteParser {
 	}
 
 	private void parseRetorno() throws MitteParserException, IOException {
-		acceptToken();// retorno
+		acceptToken();// return
 		parseExpressao();
 		acceptToken(TokenType.PONTO_VIRGULA);
 	}
 
-	private void parseChamadaFuncaoCMD() throws MitteParserException, IOException {// chamada
-																					// de
-																					// funcao
-																					// cmd
-		acceptToken();
+	private void parseChamadaFuncaoCMD() throws MitteParserException, IOException {
+		acceptToken(); //call
 		parseChamadaFuncao();
 		acceptToken(TokenType.PONTO_VIRGULA);
 
@@ -209,14 +206,14 @@ public class MitteParser {
 
 	private void parseRestoExpressao() throws MitteParserException, IOException {
 		while(currentToken.getType() == TokenType.VIRGULA){
-			acceptToken();
+			acceptToken();//virgula
 			parseExpressao();
 		}
 	
 	}
 
 	private void parseEscrita() throws MitteParserException, IOException {
-		acceptToken();
+		acceptToken();//print
 		acceptToken(TokenType.ABRE_PAR);
 		parseExpressao();
 		acceptToken(TokenType.FECHA_PAR);
@@ -224,7 +221,7 @@ public class MitteParser {
 	}
 
 	private void parseDecisao() throws MitteParserException, IOException {
-		acceptToken();
+		acceptToken();//if
 		acceptToken(TokenType.ABRE_PAR);
 		parseExpressao();
 		acceptToken(TokenType.FECHA_PAR);
@@ -235,7 +232,7 @@ public class MitteParser {
 
 	private void parseRestoDecisao() throws MitteParserException, IOException {
 		if (currentToken.getType() == TokenType.KEY_ELSE) {
-			acceptToken();
+			acceptToken();//else
 			parseComando();
 		} else {
 			// vazio
@@ -244,7 +241,7 @@ public class MitteParser {
 	}
 
 	private void parseIteracao() throws MitteParserException, IOException {
-		acceptToken();
+		acceptToken();//while
 		acceptToken(TokenType.ABRE_PAR);
 		parseExpressao();
 		acceptToken(TokenType.FECHA_PAR);
@@ -278,7 +275,7 @@ public class MitteParser {
 
 	private void parseParamFormais() throws MitteParserException, IOException {
 		if (currentToken.getType() == TokenType.IDENTIFICADOR) {
-			acceptToken();
+			acceptToken();//identificador
 			acceptToken(TokenType.DOIS_PONTOS);
 			parseTipo();
 			parseRestoParamFormais();
@@ -290,7 +287,7 @@ public class MitteParser {
 
 	private void parseRestoParamFormais() throws MitteParserException, IOException {
 		while (currentToken.getType() == TokenType.VIRGULA) {
-			acceptToken();
+			acceptToken();//virgula
 			acceptToken(TokenType.IDENTIFICADOR);
 			acceptToken(TokenType.DOIS_PONTOS);
 			parseTipo();
@@ -300,7 +297,7 @@ public class MitteParser {
 
 	private void parseRestoAssinatura() throws MitteParserException, IOException {
 		if (currentToken.getType() == TokenType.DOIS_PONTOS) {
-			acceptToken();
+			acceptToken();//dois pontos
 			parseTipo();
 		} else {
 			// vazio
@@ -343,10 +340,10 @@ public class MitteParser {
 
 	private void parseRestoExpOrAnd() throws MitteParserException, IOException {
 		if (currentToken.getType() == TokenType.OR) {
-			acceptToken();
+			acceptToken();//or
 			parseExpOrAnd();
 		} else if (currentToken.getType() == TokenType.AND) {
-			acceptToken();
+			acceptToken();//and
 			parseExpOrAnd();
 		} else {
 			// vazio
