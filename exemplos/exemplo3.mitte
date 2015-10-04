@@ -1,6 +1,6 @@
 def main() 
 { 
-   x, y : indt; 
+   x, y : int; 
    m :int; 
    x = 120;  (* dois valores a partir dos quais *) 
    y = 640;  (* sera calculado o m.d.c.         *) 
