@@ -15,16 +15,13 @@ public class TestLexer {
 	 */
 	public static void main(String[] args) throws Exception {
 		MitteLexer lexer ;
-		lexer = new MitteLexer(new FileReader("C:/Users/Ivan Rodrigues/Desktop/dev/workspace/Mitte-Compilador/exemplos/exemplo0.mitte"));
+		lexer = new MitteLexer(new FileReader("exemplos/exemplo3.mitte"));
 		Token token = null;
 		
 		System.out.println("\n\n\n");
 		System.out.println(" == TESTE DO LEXER ==\n");
-		System.out.println(" Digite alguma string terminada em \";\" e tecle ENTER:\n\n");
-		System.out.print(" ");
 		
-		// parar passar um arquivo como entrada
-		//lexer.reset(new FileInputStream("caminho do arquivo"));
+		System.out.print(" ");
 		
 		do {
 			token = lexer.nextToken();

@@ -1,7 +1,6 @@
-def
- main() 
+def main() 
 { 
-   x, y : int; 
+   x, y : indt; 
    m :int; 
    x = 120;  (* dois valores a partir dos quais *) 
    y = 640;  (* sera calculado o m.d.c.         *) 

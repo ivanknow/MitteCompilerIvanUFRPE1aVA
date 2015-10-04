@@ -57,7 +57,7 @@ public class MitteParser {
 		} else if (currentToken.getType() == TokenType.IDENTIFICADOR) {
 			parseDeclVariavel();
 		} else {
-			throw new MitteParserException("");
+			throw new MitteParserException("[PARSE DECLARACAO GLOBAL]: Era esperado DEF ou IDENTIFICADOR");
 		}
 
 	}
@@ -98,8 +98,7 @@ public class MitteParser {
 			acceptToken();
 			break;
 		default:
-			new MitteParserException("[parseTipo]");
-			break;
+			throw new MitteParserException("[PARSE TIPO] ERA ESPERADO UM TIPO AO INVES DE:"+currentToken);
 		}
 
 	}
