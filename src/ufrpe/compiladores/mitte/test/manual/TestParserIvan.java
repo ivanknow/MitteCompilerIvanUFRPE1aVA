@@ -1,30 +1,18 @@
 package ufrpe.compiladores.mitte.test.manual;
 
-import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.InputStreamReader;
 
 import ufrpe.compiladores.mitte.MitteParser;
 import ufrpe.compiladores.mitte.exception.MitteParserException;
 
-public class TestParser {
+public class TestParserIvan {
 
 	/**
 	 * Este metodo executa um pequeno teste de reconhecimento.  
 	 */
 	public static void main(String[] args) throws Exception {
-		MitteParser parser = new MitteParser(new FileReader("exemplos/exercico2.mitte"));
-
+		MitteParser parser = new MitteParser(new FileReader("exemplos/exemplo3.mitte"));
 		
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-		String arquivo;
-		
-		if (args.length == 0) {
-			System.out.print("Digite o nome do arquivo: ");
-			arquivo = in.readLine();
-		} else {
-			arquivo = args[0];
-		}		
 
 		System.out.println(" == TESTE DO PARSER ==\n");
 		try{
@@ -37,15 +25,13 @@ public class TestParser {
 			}
 			
 		}catch(MitteParserException e){
-			System.out.println("[ERRO]"+e.getMessage()+e.getClass());
+			System.out.println("[ERRO]"+e.getMessage());
 			e.printStackTrace();
 		}catch (Exception e) {
-			System.out.println("[ERRO]"+e.getMessage()+e.getClass());
+			System.out.println("[ERRO]"+e.getMessage());
 		}
-			parser.parse();
-			System.out.println("OK");
-	
-
+		
+		System.out.println(" == FIM ==");
 	}
-
+	
 }
