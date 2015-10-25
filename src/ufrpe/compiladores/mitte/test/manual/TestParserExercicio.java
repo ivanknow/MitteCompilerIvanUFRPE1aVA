@@ -3,15 +3,16 @@ package ufrpe.compiladores.mitte.test.manual;
 import java.io.FileReader;
 
 import ufrpe.compiladores.mitte.MitteParser;
+import ufrpe.compiladores.mitte.ParSerExercicio;
 import ufrpe.compiladores.mitte.exception.MitteParserException;
 
-public class TestParser {
+public class TestParserExercicio {
 
 	/**
 	 * Este metodo executa um pequeno teste de reconhecimento.  
 	 */
 	public static void main(String[] args) throws Exception {
-		MitteParser parser = new MitteParser(new FileReader("exemplos/exercico2.mitte"));
+		ParSerExercicio parser = new ParSerExercicio(new FileReader("exemplos/exemplo0.xpr0"));
 		
 
 		System.out.println(" == TESTE DO PARSER ==\n");

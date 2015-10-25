@@ -1,0 +1,12 @@
+def funcExemplo(x: int,y: int,z: char) : int {
+return x;
+}
+def main()  {
+  m :char;
+  n :int;
+  m='\n';
+   
+   call funcExemplo(10,20,m); 
+   n=funcExemplo(10,20,m);	
+   	
+}  

@@ -1,0 +1,8 @@
+def funcExemplo(x: int) : int {
+return x+1;
+}
+def main()  {
+  n :int;
+  print(funcExemplo(10));	
+   	
+}  

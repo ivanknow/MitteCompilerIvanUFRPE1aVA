@@ -1,0 +1,19 @@
+(*teste*)
+
+def main()  {
+   x, y : int;    
+   z : float;  
+   
+   	x = 10;
+   	y = 9;
+   if ( x == y )
+          print("iguais");  
+   else       
+   		print("diferentes");  
+   
+   	while (x > 0) {
+   	x = x-1;
+   	print(z);    
+   	} 
+   	 
+   }  
